@@ -1,0 +1,67 @@
+-- // Chilli Hub - Tự động đồng bộ Key trực tiếp từ GitHub
+local KeySystem = {
+    WebUrl = "https://nguyenvankha201171-jpg.github.io/KeyMod/",
+    -- Link Raw dẫn thẳng tới file key.txt trên GitHub của bạn
+    RawKeyUrl = "https://raw.githubusercontent.com/nguyenvankha201171-jpg/KeyMod/main/key.txt"
+}
+
+-- Khởi tạo UI Rayfield
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "🌶️ Chilli Hub | Xác Thực Key Online",
+   LoadingTitle = "Đang tải Key từ Server...",
+   ConfigurationSaving = { Enabled = false }
+})
+
+local KeyTab = Window:CreateTab("🔑 Kích Hoạt", 4483362458)
+
+KeyTab:CreateButton({
+   Name = "📋 Sao Chép Link Web Get Key",
+   Callback = function()
+      setclipboard(KeySystem.WebUrl)
+      Rayfield:Notify({
+         Title = "Đã Copy!",
+         Content = "Link Web Key đã được lưu. Hãy dán vào Chrome!",
+         Duration = 3,
+      })
+   end,
+})
+
+KeyTab:CreateInput({
+   Name = "Nhập Key từ Web",
+   PlaceholderText = "Dán Key vào đây...",
+   RemoveTextOnFocus = false,
+   Callback = function(EnteredKey)
+      -- Tải Key mới nhất từ file key.txt trên GitHub
+      local ServerKey = ""
+      local success, err = pcall(function()
+          ServerKey = game:HttpGet(KeySystem.RawKeyUrl)
+      end)
+
+      -- Xóa các ký tự khoảng trắng hoặc xuống dòng thừa
+      ServerKey = string.gsub(ServerKey, "%s+", "")
+      local CleanedEnteredKey = string.gsub(EnteredKey, "%s+", "")
+
+      if success and CleanedEnteredKey == ServerKey and ServerKey ~= "" then
+          Rayfield:Notify({
+             Title = "✅ Kích Hoạt Thành Công!",
+             Content = "Key chính xác! Đang mở Chilli Hub...",
+             Duration = 3,
+          })
+          task.wait(1)
+          Rayfield:Destroy()
+          
+          -- ==========================================
+          -- CHẠY MENU CHÍNH (STEAL AN EGG) TẠI ĐÂY
+          -- ==========================================
+          print("Chilli Hub Loaded!")
+      else
+          Rayfield:Notify({
+             Title = "❌ Key Không Đúng!",
+             Content = "Key sai hoặc không kết nối được server. Vui lòng kiểm tra lại!",
+             Duration = 4,
+          })
+      end
+   end,
+})
