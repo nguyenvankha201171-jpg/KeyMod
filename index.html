@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kho khóa bản quyền</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F1EC;--card:#FBFAF7;--ink:#0F1B2D;--mute:#5B6678;--line:#DAD6CB;--brass:#9A6B12;--brass-bg:#F1E3BF;--ok:#1F7A6B;--ok-bg:#D5EBE5;--bad:#B3392F;--bad-bg:#F5D9D5;--idle:#44536B;--idle-bg:#E0E5EE;
+--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;--sans:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1420;--card:#161E2E;--ink:#ECE9E1;--mute:#98A3B6;--line:#2A3448;--brass:#E2B54E;--brass-bg:#3A2F14;--ok:#5CC7B0;--ok-bg:#15332D;--bad:#F08A7E;--bad-bg:#3D1C19;--idle:#A9B6CC;--idle-bg:#252F44}}
+:root[data-theme="dark"]{--bg:#0E1420;--card:#161E2E;--ink:#ECE9E1;--mute:#98A3B6;--line:#2A3448;--brass:#E2B54E;--brass-bg:#3A2F14;--ok:#5CC7B0;--ok-bg:#15332D;--bad:#F08A7E;--bad-bg:#3D1C19;--idle:#A9B6CC;--idle-bg:#252F44}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.55 var(--sans)}
+main{max-width:980px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:28px;line-height:1.2;margin:0 0 4px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:16px;margin:0 0 14px;font-weight:700}
+.sub{color:var(--mute);margin:0 0 24px;max-width:60ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--mute);margin:0 0 4px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:9px 10px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+button{font:500 14px var(--sans);cursor:pointer;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px}
+button:hover{border-color:var(--ink)}
+button.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button.sm{padding:4px 9px;font-size:13px}
+button.danger{color:var(--bad)}
+.stub{margin-top:14px;border:1.5px dashed var(--brass);border-radius:8px;background:var(--brass-bg);padding:14px 16px;display:none}
+.stub.on{display:block;animation:pop .25s ease-out}
+@keyframes pop{from{transform:scale(.97);opacity:.4}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.stub.on{animation:none}}
+.stub small{color:var(--brass);font-weight:500}
+.big{font:700 20px/1.4 var(--mono);color:var(--ink);word-break:break-all;margin:4px 0 10px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.stat{flex:1 1 120px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--card)}
+.stat b{display:block;font:700 22px var(--mono)}
+.stat span{font-size:13px;color:var(--mute)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.tools input{flex:2 1 200px}.tools select{flex:1 1 140px}
+.list{display:grid;gap:8px}
+.item{display:grid;grid-template-columns:1fr auto;gap:6px 12px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--card)}
+.item .k{font:700 14px var(--mono);word-break:break-all}
+.meta{font-size:13px;color:var(--mute)}
+.acts{display:flex;gap:6px;flex-wrap:wrap;grid-column:1/-1}
+.badge{font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap;align-self:start}
+.s-active{background:var(--ok-bg);color:var(--ok)}.s-unused{background:var(--idle-bg);color:var(--idle)}
+.s-expired,.s-revoked{background:var(--bad-bg);color:var(--bad)}
+.empty{padding:22px;text-align:center;color:var(--mute);border:1px dashed var(--line);border-radius:8px}
+#msg{margin-top:12px;padding:10px 12px;border-radius:6px;display:none;font-size:14px}
+.note{font-size:13px;color:var(--mute);margin-top:22px;max-width:70ch}
+[hidden]{display:none!important}
+.tabs{display:flex;gap:6px;margin-bottom:18px}.tab{padding:8px 18px}.tab.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+textarea{width:100%;font:12px/1.5 var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:9px 10px}
+textarea:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.plan{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--bg);display:grid;gap:8px}
+.price{font:700 18px var(--mono);color:var(--brass)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Kho khóa bản quyền</h1>
+  <p class="sub">Tạo, kiểm tra và thu hồi license key cho phần mềm của bạn. Dữ liệu được lưu ngay trên trình duyệt này.</p>
+
+  <div class="tabs"><button class="tab on" id="tabA">Quản trị</button><button class="tab" id="tabS">Cửa hàng</button></div>
+  <div id="admin"><div class="grid">
+    <section class="card">
+      <h2>Tạo khóa mới</h2>
+      <div class="row">
+        <div><label for="prod">Sản phẩm</label><input id="prod" value="Phần mềm của tôi" maxlength="40"></div>
+        <div><label for="plan">Thời hạn</label>
+          <select id="plan"><option value="30">30 ngày</option><option value="90">90 ngày</option><option value="365" selected>1 năm</option><option value="0">Vĩnh viễn</option></select></div>
+      </div>
+      <div class="row">
+        <div><label for="mail">Email khách hàng (tùy chọn)</label><input id="mail" type="email" placeholder="khach@example.com"></div>
+        <div><label for="qty">Số lượng</label><input id="qty" type="number" min="1" max="50" value="1"></div>
+      </div>
+      <div class="row"><div><label for="maxdev">Số thiết bị tối đa</label><input id="maxdev" type="number" min="1" max="20" value="1"></div><div><label for="note">Ghi chú</label><input id="note" maxlength="60" placeholder="VD: khách VIP"></div></div><button class="pri" id="gen">Tạo khóa</button>
+      <div class="stub" id="stub"><small>Khóa vừa tạo</small><div class="big" id="newKey"></div><button class="sm" id="copyNew">Sao chép</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Kiểm tra / kích hoạt khóa</h2>
+      <label for="chk">Nhập license key</label>
+      <input id="chk" placeholder="ABC-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" style="font-family:var(--mono);margin-bottom:12px">
+      <label for="dev">Tên thiết bị</label><input id="dev" placeholder="VD: Laptop văn phòng" maxlength="40" style="margin-bottom:12px"><button class="pri" id="verify">Kiểm tra &amp; kích hoạt</button>
+      <div id="msg" role="status"></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>Danh sách khóa</h2>
+    <div class="stats" id="stats"></div>
+    <div class="tools">
+      <input id="q" placeholder="Tìm theo khóa, sản phẩm hoặc email" aria-label="Tìm kiếm">
+      <select id="flt" aria-label="Lọc trạng thái"><option value="">Tất cả trạng thái</option><option value="unused">Chưa kích hoạt</option><option value="active">Đang hoạt động</option><option value="expired">Hết hạn</option><option value="revoked">Đã thu hồi</option></select>
+      <button id="csv">Sao lưu / xuất</button>
+    </div>
+    <div id="bkp" hidden style="margin-bottom:12px"><label for="bkt">Bấm Xuất JSON hoặc Xuất CSV rồi sao chép để lưu. Để khôi phục, dán bản JSON vào đây và bấm Nhập JSON.</label><textarea id="bkt" rows="6"></textarea><div class="tools" style="margin:8px 0 0"><button class="sm" id="xj">Xuất JSON</button><button class="sm" id="xc">Xuất CSV</button><button class="sm" id="xcp">Sao chép</button><button class="sm" id="xi">Nhập JSON</button></div><div class="meta" id="bkm"></div></div><div class="list" id="list"></div>
+  </section>
+
+  </div>
+  <div id="store" hidden>
+    <section class="card"><h2>Thiết lập cửa hàng</h2><div class="row"><div><label for="sname">Tên sản phẩm</label><input id="sname" maxlength="40"></div><div><label for="sdev">Số thiết bị mỗi khóa</label><input id="sdev" type="number" min="1" max="20"></div></div><div class="row"><div><label for="p30">Giá 30 ngày (₫)</label><input id="p30" type="number" min="0"></div><div><label for="p90">Giá 90 ngày (₫)</label><input id="p90" type="number" min="0"></div></div><div class="row" style="margin-bottom:0"><div><label for="p365">Giá 1 năm (₫)</label><input id="p365" type="number" min="0"></div><div><label for="p0">Giá vĩnh viễn (₫)</label><input id="p0" type="number" min="0"></div></div></section>
+    <section class="card"><h2>Trang mua hàng của khách</h2><p class="meta" style="margin:0 0 10px">Sản phẩm: <b id="pname"></b></p><label for="cmail">Email nhận khóa</label><input id="cmail" type="email" placeholder="khach@example.com"><div class="plans" id="plans"></div><div class="meta" id="omsg"></div><div class="stub" id="order"><small>Khóa của bạn</small><div class="big" id="okey"></div><button class="sm" id="ocp">Sao chép</button></div><p class="meta">Thanh toán ở đây chỉ là mô phỏng: bấm Mua ngay sẽ tạo khóa ngay và không thu tiền thật.</p></section>
+  </div>
+  <p class="note">Lưu ý: trang này chạy hoàn toàn trên trình duyệt nên chỉ phù hợp để quản lý nội bộ hoặc làm bản mẫu. Để bán key thật, bạn cần máy chủ lưu khóa, API xác thực từ phần mềm và cổng thanh toán.</p>
+</main>
+
+<script>
+(function(){
+  var KEY='lk:v1', keys=[];
+  try{ keys=JSON.parse(localStorage.getItem(KEY)||'[]'); if(!Array.isArray(keys)) keys=[]; }catch(e){ keys=[]; }
+  var $=function(id){return document.getElementById(id)};
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(keys)); }catch(e){} }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]}); }
+  var DAY=86400000, AL='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function rnd(n){ var a=new Uint8Array(n),s='';(window.crypto||{getRandomValues:function(x){for(var i=0;i<x.length;i++)x[i]=Math.random()*256;}}).getRandomValues(a); for(var i=0;i<n;i++) s+=AL[a[i]%AL.length]; return s; }
+  function prefix(name){ var p=name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/gi,'d').replace(/[^a-zA-Z0-9]/g,'').toUpperCase().slice(0,3); return (p+'XXX').slice(0,3); }
+  function mk(prod,days,mail,x){ x=x||{};
+    var k; do{ k=prefix(prod)+'-'+rnd(4)+'-'+rnd(4)+'-'+rnd(4); }while(keys.some(function(x){return x.key===k}));
+    return {id:Date.now()+Math.random(),key:k,product:prod,email:mail,days:days,createdAt:Date.now(),activatedAt:null,revoked:false,maxDev:x.maxDev||1,note:x.note||'',price:x.price||0,devices:[]};
+  }
+  function expiry(k){ return k.days>0&&k.activatedAt? k.activatedAt+k.days*DAY : null; }
+  function status(k){
+    if(k.revoked) return 'revoked';
+    if(!k.activatedAt) return 'unused';
+    var e=expiry(k); return (e&&Date.now()>e)?'expired':'active';
+  }
+  var LBL={unused:'Chưa kích hoạt',active:'Đang hoạt động',expired:'Hết hạn',revoked:'Đã thu hồi'};
+  function fd(t){ return new Date(t).toLocaleDateString('vi-VN'); }
+  function planTxt(d){ return d===0?'Vĩnh viễn':(d===365?'1 năm':d+' ngày'); }
+  function copy(t,btn){
+    var done=function(){ var o=btn.textContent; btn.textContent='Đã sao chép'; setTimeout(function(){btn.textContent=o},1200); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,function(){fallback()}); } else fallback();
+    function fallback(){ var i=document.createElement('textarea'); i.value=t; document.body.appendChild(i); i.select(); try{document.execCommand('copy');done();}catch(e){} document.body.removeChild(i); }
+  }
+  function render(){
+    var c={unused:0,active:0,expired:0,revoked:0};
+    keys.forEach(function(k){c[status(k)]++});
+    $('stats').innerHTML=[['Tổng',keys.length],['Chưa kích hoạt',c.unused],['Đang hoạt động',c.active],['Hết hạn / thu hồi',c.expired+c.revoked],['Doanh thu',money(keys.reduce(function(t,k){return t+(k.price||0)},0))]].map(function(s){return '<div class="stat"><b>'+s[1]+'</b><span>'+s[0]+'</span></div>'}).join('');
+    var q=$('q').value.trim().toLowerCase(), f=$('flt').value;
+    var rows=keys.filter(function(k){
+      if(f&&status(k)!==f) return false;
+      return !q||(k.key+' '+k.product+' '+k.email).toLowerCase().indexOf(q)>-1;
+    }).sort(function(a,b){return b.createdAt-a.createdAt});
+    if(!rows.length){ $('list').innerHTML='<div class="empty">'+(keys.length?'Không có khóa nào khớp bộ lọc.':'Chưa có khóa nào. Bấm "Tạo khóa" để bắt đầu.')+'</div>'; return; }
+    $('list').innerHTML=rows.map(function(k){
+      var s=status(k), e=expiry(k);
+      var info=esc(k.product)+' · '+planTxt(k.days)+(k.email?' · '+esc(k.email):'')+' · tạo '+fd(k.createdAt)+(e?' · hết hạn '+fd(e)+(s==='active'&&e-Date.now()<7*DAY?' (sắp hết hạn)':''):'')+' · thiết bị '+(k.devices||[]).length+'/'+(k.maxDev||1)+(k.note?' · '+esc(k.note):'')+(k.price?' · đã bán '+money(k.price):'');
+      return '<div class="item" data-id="'+k.id+'"><div><div class="k">'+esc(k.key)+'</div><div class="meta">'+info+'</div></div><span class="badge s-'+s+'">'+LBL[s]+'</span>'
+        +'<div class="acts"><button class="sm" data-a="copy">Sao chép</button><button class="sm" data-a="renew">Gia hạn +30 ngày</button><button class="sm" data-a="reset">Gỡ thiết bị</button>'
+        +(k.revoked?'<button class="sm" data-a="restore">Khôi phục</button>':'<button class="sm danger" data-a="revoke">Thu hồi</button>')
+        +'<button class="sm danger" data-a="del">Xóa</button></div></div>';
+    }).join('');
+  }
+  $('gen').onclick=function(){
+    var prod=$('prod').value.trim()||'Sản phẩm', days=parseInt($('plan').value,10), mail=$('mail').value.trim();
+    var n=Math.max(1,Math.min(50,parseInt($('qty').value,10)||1)), made=[];
+    for(var i=0;i<n;i++){ var k=mk(prod,days,mail,{maxDev:Math.max(1,parseInt($('maxdev').value,10)||1),note:$('note').value.trim()}); keys.push(k); made.push(k.key); }
+    save(); render();
+    $('newKey').innerHTML=made.map(esc).join('<br>');
+    $('stub').className='stub on'; $('stub').dataset.v=made.join('\n');
+  };
+  $('copyNew').onclick=function(){ copy($('stub').dataset.v||'',this); };
+  function show(ok,t){ var m=$('msg'); m.style.display='block'; m.style.background=ok?'var(--ok-bg)':'var(--bad-bg)'; m.style.color=ok?'var(--ok)':'var(--bad)'; m.textContent=t; }
+  $('verify').onclick=function(){
+    var v=$('chk').value.trim().toUpperCase();
+    if(!v){ show(false,'Hãy nhập license key cần kiểm tra.'); return; }
+    var k=keys.filter(function(x){return x.key===v})[0];
+    if(!k){ show(false,'Khóa không tồn tại trong kho.'); return; }
+    var s=status(k);
+    if(s==='revoked') return show(false,'Khóa này đã bị thu hồi.');
+    if(s==='expired') return show(false,'Khóa đã hết hạn ngày '+fd(expiry(k))+'.');
+    var dv=$('dev').value.trim()||'Thiết bị không tên'; k.devices=k.devices||[]; if(k.devices.indexOf(dv)<0){ if(k.devices.length>=(k.maxDev||1)) return show(false,'Khóa đã dùng hết '+(k.maxDev||1)+' thiết bị cho phép.'); k.devices.push(dv); save(); render(); }
+    if(s==='unused'){ k.activatedAt=Date.now(); save(); render(); var e=expiry(k); return show(true,'Kích hoạt thành công cho "'+k.product+'". '+(e?'Hết hạn ngày '+fd(e)+'.':'Khóa vĩnh viễn.')); }
+    var e2=expiry(k); show(true,'Khóa đang hoạt động. '+(e2?'Còn '+Math.ceil((e2-Date.now())/DAY)+' ngày (đến '+fd(e2)+').':'Khóa vĩnh viễn.'));
+  };
+  $('chk').addEventListener('keydown',function(e){ if(e.key==='Enter') $('verify').click(); });
+  $('list').onclick=function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    var el=b.closest('.item'), id=el&&el.getAttribute('data-id');
+    var k=keys.filter(function(x){return String(x.id)===id})[0]; if(!k) return;
+    var a=b.getAttribute('data-a');
+    if(a==='copy') return copy(k.key,b);
+    if(a==='revoke') k.revoked=true;
+    if(a==='restore') k.revoked=false;
+    if(a==='reset') k.devices=[];
+    if(a==='renew'){ if(k.days===0) return; var used=k.activatedAt?Math.ceil((Date.now()-k.activatedAt)/DAY):0; k.days=(status(k)==='expired'?used:k.days)+30; }
+    if(a==='del'){ if(!b.dataset.sure){ b.dataset.sure=1; b.textContent='Bấm lần nữa để xóa'; setTimeout(function(){ b.dataset.sure=''; b.textContent='Xóa'; },3000); return; } keys=keys.filter(function(x){return x!==k}); }
+    save(); render();
+  };
+  $('q').oninput=render; $('flt').onchange=render;
+  $('csv').onclick=function(){
+    if(!keys.length) return;
+    var rows=[['key','san_pham','email','thoi_han','trang_thai','ngay_tao','het_han']].concat(keys.map(function(k){var e=expiry(k);return [k.key,k.product,k.email,planTxt(k.days),LBL[status(k)],fd(k.createdAt),e?fd(e):'']}));
+    var txt='\ufeff'+rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(',')}).join('\n');
+    try{ var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})), a=document.createElement('a'); a.href=u; a.download='license-keys.csv'; a.click(); setTimeout(function(){URL.revokeObjectURL(u)},500); }catch(err){}
+  };
+  render();
+function money(n){ return (n||0).toLocaleString('vi-VN')+' ₫'; }
+  var SK='lk:shop', shop={name:'Phần mềm của tôi',dev:1,p:{'30':79000,'90':199000,'365':599000,'0':1499000}};
+  try{ var sv=JSON.parse(localStorage.getItem(SK)||'null'); if(sv&&sv.p) shop=sv; }catch(e){}
+  function saveShop(){ try{ localStorage.setItem(SK,JSON.stringify(shop)); }catch(e){} }
+  var PL=[['30','30 ngày'],['90','90 ngày'],['365','1 năm'],['0','Vĩnh viễn']];
+  function plans(){ $('pname').textContent=shop.name; $('plans').innerHTML=PL.map(function(p){return '<div class="plan"><b>'+p[1]+'</b><div class="price">'+money(shop.p[p[0]])+'</div><button class="pri sm" data-d="'+p[0]+'">Mua ngay</button></div>'}).join(''); }
+  $('sname').value=shop.name; $('sdev').value=shop.dev; PL.forEach(function(p){ $('p'+p[0]).value=shop.p[p[0]]; }); plans();
+  $('store').addEventListener('input',function(e){ if(e.target.id==='cmail') return; shop.name=$('sname').value.trim()||'Sản phẩm'; shop.dev=Math.max(1,parseInt($('sdev').value,10)||1); PL.forEach(function(p){ shop.p[p[0]]=Math.max(0,parseInt($('p'+p[0]).value,10)||0); }); saveShop(); plans(); });
+  function tab(s){ $('admin').hidden=s; $('store').hidden=!s; $('tabA').className='tab'+(s?'':' on'); $('tabS').className='tab'+(s?' on':''); }
+  $('tabA').onclick=function(){ tab(false); }; $('tabS').onclick=function(){ tab(true); };
+  $('plans').onclick=function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    var m=$('cmail').value.trim(), o=$('order');
+    if(!/^\S+@\S+\.\S+$/.test(m)){ o.className='stub'; $('omsg').textContent='Hãy nhập email hợp lệ để nhận khóa.'; return; }
+    var d=parseInt(b.getAttribute('data-d'),10), k=mk(shop.name,d,m,{maxDev:shop.dev,price:shop.p[String(d)]||0,note:'Đơn hàng từ cửa hàng'});
+    keys.push(k); save(); render();
+    $('okey').textContent=k.key; o.className='stub on'; $('omsg').textContent='Đặt hàng thành công. Hãy lưu lại khóa bên dưới (bản mô phỏng, chưa gửi email thật).';
+  };
+  $('ocp').onclick=function(){ copy($('okey').textContent,this); };
+  var bkt=$('bkt');
+  $('csv').onclick=function(){ $('bkp').hidden=!$('bkp').hidden; };
+  $('xj').onclick=function(){ bkt.value=JSON.stringify({keys:keys,shop:shop},null,1); bkt.select(); $('bkm').textContent='Đã tạo bản sao lưu JSON. Hãy sao chép và lưu vào nơi an toàn.'; };
+  $('xc').onclick=function(){ var rows=[['key','san_pham','email','thoi_han','trang_thai','ngay_tao','het_han','thiet_bi']].concat(keys.map(function(k){var e=expiry(k);return [k.key,k.product,k.email,planTxt(k.days),LBL[status(k)],fd(k.createdAt),e?fd(e):'',(k.devices||[]).length+'/'+(k.maxDev||1)]})); bkt.value=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(',')}).join('\n'); bkt.select(); $('bkm').textContent='Đã tạo CSV. Dán vào Excel hoặc Google Sheets.'; };
+  $('xcp').onclick=function(){ copy(bkt.value,this); };
+  $('xi').onclick=function(){ try{ var d=JSON.parse(bkt.value), n=0; (d.keys||[]).forEach(function(k){ if(k&&k.key&&!keys.some(function(x){return x.key===k.key})){ keys.push(k); n++; } }); save(); render(); $('bkm').textContent='Đã nhập '+n+' khóa mới.'; }catch(err){ $('bkm').textContent='Dữ liệu JSON không hợp lệ.'; } };
+})();
+</script>
+</body>
+</html>
