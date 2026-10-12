@@ -1,135 +1,127 @@
--- // Chilli Hub - Steal An Egg (Key System Integrated)
--- // Web Get Key: https://nguyenvankha201171-jpg.github.io/KeyMod/
-
-local KeySystem = {
-    WebUrl = "https://nguyenvankha201171-jpg.github.io/KeyMod/",
-    ValidKey = "CHILLI-FREE-2026" -- Bạn có thể đổi Key này trùng với Key trên Web của bạn
-}
+-- // Chilli Hub v3.7 - Steal An Egg (Orion UI Super Lightweight)
+local WebUrl = "https://nguyenvankha201171-jpg.github.io/KeyMod/"
+local CorrectKey = "CHILLI-FREE-2026"
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Khởi tạo thư viện Rayfield UI
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+-- Tải thư viện Orion Library (Chạy mượt trên điện thoại)
+local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Orion/main/source'))()
 
-local Window = Rayfield:CreateWindow({
-   Name = "🌶️ Chilli Hub | Hệ Thống Key",
-   LoadingTitle = "Chilli Hub đang kiểm tra...",
-   LoadingSubtitle = "by kha71VN",
-   ConfigurationSaving = { Enabled = false }
+local Window = OrionLib:MakeWindow({Name = "🌶️ Chilli Hub | Steal An Egg", HidePremium = true, SaveConfig = false, ConfigFolder = "ChilliConfig"})
+
+-- TAB KEY
+local KeyTab = Window:MakeTab({
+	Name = "🔑 Nhập Key",
+	Icon = "rbxassetid://4483362458",
+	PremiumOnly = false
 })
 
--- Tạo Tab Xác Thực Key
-local KeyTab = Window:CreateTab("🔑 Xác Thực Key", 4483362458)
-
-KeyTab:CreateParagraph({
-    Title = "📌 Hướng dẫn lấy Key",
-    Content = "Hãy bấm nút 'Sao chép Link Web Key', dán vào trình duyệt (Chrome/Safari) để lấy Key miễn phí!"
+KeyTab:AddButton({
+	Name = "📋 Copy Link Web Get Key",
+	Callback = function()
+     setclipboard(WebUrl)
+     OrionLib:MakeNotification({
+		Name = "Đã Sao Chép!",
+		Content = "Link Web Key đã được lưu vào bộ nhớ tạm.",
+		Image = "rbxassetid://4483362458",
+		Time = 3
+	})
+  end    
 })
 
-KeyTab:CreateButton({
-   Name = "📋 Sao Chép Link Web Get Key",
-   Callback = function()
-      setclipboard(KeySystem.WebUrl)
-      Rayfield:Notify({
-         Title = "Đã Sao Chép!",
-         Content = "Link Web Key đã được lưu vào bộ nhớ tạm. Hãy dán vào trình duyệt!",
-         Duration = 4,
-      })
-   end,
+KeyTab:AddTextbox({
+	Name = "Nhập Key",
+	Default = "",
+	TextDisappear = false,
+	Callback = function(Value)
+		local CleanKey = string.gsub(Value, "%s+", "")
+        if CleanKey == CorrectKey or CleanKey == "CHILLI-2026" then
+            OrionLib:MakeNotification({
+                Name = "✅ Thành Công!",
+                Content = "Key chính xác!",
+                Image = "rbxassetid://4483362458",
+                Time = 3
+            })
+            task.wait(1)
+            OrionLib:Destroy()
+
+            -- ==========================================
+            -- 🚀 TẠO MENU CHÍNH SAU KHI XÁC THỰC KEY
+            -- ==========================================
+            local MainWin = OrionLib:MakeWindow({Name = "🌶️ Chilli Hub v3.7 Main", HidePremium = true, SaveConfig = false})
+            local MainTab = MainWin:MakeTab({Name = "Tính Năng", Icon = "rbxassetid://4483362458"})
+
+            local Features = { AutoSteal = false, SpeedBoost = false, WalkSpeed = 32 }
+
+            -- Auto Steal Loop
+            task.spawn(function()
+                while task.wait(0.1) do
+                    if Features.AutoSteal then
+                        pcall(function()
+                            local char = LocalPlayer.Character
+                            if char and char:FindFirstChild("HumanoidRootPart") then
+                                for _, v in pairs(workspace:GetDescendants()) do
+                                    if Features.AutoSteal and (string.find(string.lower(v.Name), "egg") or v:FindFirstChild("TouchInterest")) then
+                                        if v:IsA("BasePart") then
+                                            char.HumanoidRootPart.CFrame = v.CFrame
+                                            task.wait(0.05)
+                                        end
+                                    end
+                                end
+                            end
+                        end)
+                    end
+                end
+            end)
+
+            -- Speed Loop
+            task.spawn(function()
+                while task.wait(0.2) do
+                    if Features.SpeedBoost and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                        LocalPlayer.Character.Humanoid.WalkSpeed = Features.WalkSpeed
+                    end
+                end
+            end)
+
+            MainTab:AddToggle({
+                Name = "🔥 Auto Steal Eggs",
+                Default = false,
+                Callback = function(Value) Features.AutoSteal = Value end
+            })
+
+            MainTab:AddToggle({
+                Name = "⚡ Speed Boost",
+                Default = false,
+                Callback = function(Value)
+                    Features.SpeedBoost = Value
+                    if not Value and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                        LocalPlayer.Character.Humanoid.WalkSpeed = 16
+                    end
+                end
+            })
+
+            MainTab:AddSlider({
+                Name = "Tốc độ di chuyển",
+                Min = 16,
+                Max = 120,
+                Default = 32,
+                Color = Color3.fromRGB(255,69,0),
+                Increment = 1,
+                ValueName = "Speed",
+                Callback = function(Value) Features.WalkSpeed = Value end    
+            })
+
+            OrionLib:Init()
+        else
+            OrionLib:MakeNotification({
+                Name = "❌ Key Sai!",
+                Content = "Nhập: CHILLI-FREE-2026",
+                Image = "rbxassetid://4483362458",
+                Time = 3
+            })
+        end
+	end
 })
 
-KeyTab:CreateInput({
-   Name = "Nhập Key Vừa Lấy Được",
-   PlaceholderText = "Dán Key vào đây...",
-   RemoveTextOnFocus = false,
-   Callback = function(EnteredKey)
-      if EnteredKey == KeySystem.ValidKey then
-          Rayfield:Notify({
-             Title = "✅ Kích Hoạt Thành Công!",
-             Content = "Key hợp lệ! Đang mở menu tính năng...",
-             Duration = 3,
-          })
-          
-          task.wait(1)
-          Rayfield:Destroy() -- Đóng UI nhập key
-          
-          -- ===================================================
-          -- 🚀 KHU VỰC MENU TÍNH NĂNG CHÍNH (STEAL AN EGG)
-          -- ===================================================
-          local MainWindow = Rayfield:CreateWindow({
-             Name = "🌶️ Chilli Hub v3.7 | Steal An Egg",
-             LoadingTitle = "Đang tải tính năng...",
-             ConfigurationSaving = { Enabled = false }
-          })
-
-          local MainTab = MainWindow:CreateTab("Tính Năng Chính", 4483362458)
-
-          -- Biến lưu trạng thái tính năng
-          local Features = {
-              AutoSteal = false,
-              SpeedBoost = false,
-              WalkSpeed = 32
-          }
-
-          -- Vòng lặp Auto Steal Trứng
-          task.spawn(function()
-              while task.wait(0.3) do
-                  if Features.AutoSteal then
-                      pcall(function()
-                          for _, egg in pairs(workspace:GetChildren()) do
-                              if egg:FindFirstChild("TouchInterest") and string.find(string.lower(egg.Name), "egg") then
-                                  firetouchinterest(LocalPlayer.Character.HumanoidRootPart, egg, 0)
-                                  firetouchinterest(LocalPlayer.Character.HumanoidRootPart, egg, 1)
-                              end
-                          end
-                      end)
-                  end
-              end
-          end)
-
-          -- Vòng lặp Tăng Tốc Độ
-          game:GetService("RunService").RenderStepped:Connect(function()
-              if Features.SpeedBoost and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-                  LocalPlayer.Character.Humanoid.WalkSpeed = Features.WalkSpeed
-              end
-          end)
-
-          -- Nút Bật/Tắt Auto Steal
-          MainTab:CreateToggle({
-             Name = "🔥 Auto Steal Eggs (Tự động nhặt trứng)",
-             CurrentValue = false,
-             Callback = function(Value)
-                Features.AutoSteal = Value
-             end,
-          })
-
-          -- Nút Bật/Tắt Speed Boost
-          MainTab:CreateToggle({
-             Name = "⚡ Speed Boost (Tăng tốc di chuyển)",
-             CurrentValue = false,
-             Callback = function(Value)
-                Features.SpeedBoost = Value
-             end,
-          })
-
-          -- Thanh chỉnh Tốc Độ
-          MainTab:CreateSlider({
-             Name = "Chỉnh Tốc Độ Di Chuyển",
-             Range = {16, 150},
-             Increment = 1,
-             CurrentValue = 32,
-             Callback = function(Value)
-                Features.WalkSpeed = Value
-             end,
-          })
-
-      else
-          Rayfield:Notify({
-             Title = "❌ Key Không Đúng!",
-             Content = "Key bạn nhập bị sai hoặc đã hết hạn. Vui lòng kiểm tra lại trên Web!",
-             Duration = 4,
-          })
-      end
-   end,
-})
+OrionLib:Init()
